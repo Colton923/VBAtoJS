@@ -43,14 +43,14 @@ class Building {
   RakeTrimColor: number
   OutsideCorner: number
   //soffit booleans
-  e1GableOverhangSoffit: number
-  e3GableOverhangSoffit: number
-  s2EaveOverhangSoffit: number
-  s4EaveOverhangSoffit: number
-  e1GableExtensionSoffi: number
-  e3GableExtensionSoffi: number
-  s2EaveExtensionSoffit: number
-  s4EaveExtensionSoffit: number
+  e1GableOverhangSoffit: boolean
+  e3GableOverhangSoffit: boolean
+  s2EaveOverhangSoffit: boolean
+  s4EaveOverhangSoffit: boolean
+  e1GableExtensionSoffi: boolean
+  e3GableExtensionSoffi: boolean
+  s2EaveExtensionSoffit: boolean
+  s4EaveExtensionSoffit: boolean
   // this for totaling eave extension string
   EaveExtLength: number
   //roof panel overage
@@ -65,25 +65,25 @@ class Building {
   SSTotalCost: number
 
   //''''''''''''''''''''''''''''''''''''''''''''''''' FO Collections
-  e1FOs = []
-  s2FOs = []
-  e3FOs = []
-  s4FOs = []
-  fieldlocateFOs = []
+  e1FOs: any[]
+  s2FOs: any[]
+  e3FOs: any[]
+  s4FOs: any[]
+  fieldlocateFOs: any[]
   //''''''''''''''''''''''''''''''''''''''''''''''''' Column Collections
-  e1Columns = []
-  s2Columns = []
-  e3Columns = []
-  s4Columns = []
+  e1Columns: any[]
+  s2Columns: any[]
+  e3Columns: any[]
+  s4Columns: any[]
   //''''''''''''''''''''''''''''''''''''''''''''''''' Girt Collections
-  e1Girts = []
-  s2Girts = []
-  e3Girts = []
-  s4Girts = []
+  e1Girts: any[]
+  s2Girts: any[]
+  e3Girts: any[]
+  s4Girts: any[]
   //''''''''''''''''''''''''''''''''''''''''''''''''' Rafter Collections
-  e1Rafters = []
-  intRafters = []
-  e3Rafters = []
+  e1Rafters: any[]
+  intRafters: any[]
+  e3Rafters: any[]
   //''''''''''''''''''''''''''''''''''''''''''''''''' Roof Purlin Collection
   RoofPurlins = []
 
@@ -105,41 +105,42 @@ class Building {
   WeldPlates = []
 
 
-    constructor() {
-        
-    }
-    RoofLength() { 
+  constructor() {
+
+}
+
+
+    RoofLength() {
         return this.bLength * 12 + this.e1Overhang + this.e1Extension + this.e3Overhang + this.e3Extension;
     }
     RoofFtLength () {
         return (this.blength * 12 + this.e1Overhang + this.e1Extension + this.e3Overhang + this.e3Extension) / 12;
     }
+    /**
+     * Calculates the length of the rafter for the south 4 extension
+     */
     HighSideEaveHeight() {
         return (this.bHeight * 12) + (this.bWidth * this.rPitch);
     }
     s2ExtensionRafterLength() {
-        if (this.s2ExtensionRafterLength = 0){
-            
+        if (this.s2Extension === 0) {
+            return 0
+        }
+        else {
+            return (s2Extension / 12 * Math.sqrt(144 +  this.s4ExtensionPitch))
+        }
+    }
+    s4ExtensionRafterLength() {
+        if (this.s4Extension === 0) {
+            return 0
+        }
+        else {
+            return (s4Extension / 12) * Math.sqrt((12 ^ 2) + (s4ExtensionPitch ^ 2))
         }
     }
 }
 
-
-
-Public Function s2ExtensionRafterLength() As Double
-    If s2Extension = 0 Then
-        s2ExtensionRafterLength = 0
-    Else
-        s2ExtensionRafterLength = (s2Extension / 12) * Sqr((12 ^ 2) + (s2ExtensionPitch ^ 2))
-    End If
-End Function
-
-Public Function s4ExtensionRafterLength() As Double
-    If s4Extension = 0 Then
-        s4ExtensionRafterLength = 0
-    Else
-        s4ExtensionRafterLength = (s4Extension / 12) * Sqr((12 ^ 2) + (s4ExtensionPitch ^ 2))
-    End If
+Public Function
 End Function
 
 '''''''''''''''''''''''''''''''' Extension Intersections '''''''''''''''''''''''
@@ -289,7 +290,7 @@ ElseIf rShape = "Single Slope" Then
         DistanceToRoof = bHeight * 12 + (bWidth * rPitch) - StartingHeight
     End Select
 End If
-        
+
 End Function
 
 'function for distance from right corner of an endwall at a given height
@@ -461,7 +462,7 @@ For Each FOCell In Range(.Range("pDoorCell1"), .Range("pDoorCell12"))
             FO.Wall = "Field Locate"
             fieldlocateFOs.Add FO
         End Select
-        
+
     End If
 Next FOCell
 'OHDoors
@@ -575,7 +576,7 @@ For Each FOCell In Range(.Range("MiscFOCell1"), .Range("MiscFOCell12"))
     End If
 Next FOCell
 End With
-        
+
 
 End Sub
 
