@@ -1,3 +1,5 @@
+import { Member } from './MemberClass'
+
 class Building {
 	bLength: number
 	bHeight: number
@@ -22,26 +24,33 @@ class Building {
 	//endwall wall panel overlaps
 	e1WallPanelOverlaps: number
 	e3WallPanelOverlaps: number
+
 	//extension pitches
 	s2ExtensionPitch: number
 	s4ExtensionPitch: number
+
 	//extension Heights
 	s2ExtensionHeight: number
 	s4ExtensionHeight: number
+
 	//extension widths
 	s2ExtensionWidth: number
 	s4ExtensionWidth: number
+
 	//Panel Shapes
 	wPanelShape: string //sidewall panel shapes
 	rPanelShape: string //roof panel shapes
+
 	//Panel Types, Colors
 	rPanelType: string
 	rPanelColo: string
 	wPanelType: string
-	wPanelColo: string
+	wPanelColor: string
+
 	//Trim Colors
 	RakeTrimColor: string
 	OutsideCorner: string
+
 	//soffit booleans
 	e1GableOverhangSoffit: boolean
 	e3GableOverhangSoffit: boolean
@@ -51,16 +60,21 @@ class Building {
 	e3GableExtensionSoffi: boolean
 	s2EaveExtensionSoffit: boolean
 	s4EaveExtensionSoffit: boolean
+
 	// this for totaling eave extension string
 	EaveExtLength: number
+
 	//roof panel overage
 	bLengthRoofPanelOverage: number
+
 	//Interior Columns Collection
 	InteriorColumns: any[]
 	s2ColumnWidth: number
 	s4ColumnWidth: number
+
 	//'Weld Clips
 	WeldClips: number
+
 	//'Structural Steel total cost
 	SSTotalCost: number
 
@@ -70,20 +84,24 @@ class Building {
 	e3FOs: any[]
 	s4FOs: any[]
 	fieldlocateFOs: any[]
+
 	//''''''''''''''''''''''''''''''''''''''''''''''''' Column Collections
 	e1Columns: any[]
 	s2Columns: any[]
 	e3Columns: any[]
 	s4Columns: any[]
+
 	//''''''''''''''''''''''''''''''''''''''''''''''''' Girt Collections
 	e1Girts: any[]
 	s2Girts: any[]
 	e3Girts: any[]
 	s4Girts: any[]
+
 	//''''''''''''''''''''''''''''''''''''''''''''''''' Rafter Collections
 	e1Rafters: any[]
 	intRafters: any[]
 	e3Rafters: any[]
+
 	//''''''''''''''''''''''''''''''''''''''''''''''''' Roof Purlin Collection
 	RoofPurlins = []
 
@@ -92,6 +110,7 @@ class Building {
 	s2OverhangMembers = []
 	e3OverhangMembers = []
 	s4OverhangMembers = []
+
 	//''''''''''''''''''''''''''''''''''''''''''''''''' Extension Members
 	e1ExtensionMembers = []
 	s2ExtensionMembers = []
@@ -109,436 +128,773 @@ class Building {
 		formBWidth: number,
 		formBLength: number,
 		formRPitch: number,
-		formRShape: number
+		formRShape: string,
+		s2_EaveExtension: number, 
+		s4_EaveExtension: number,
+		s2_EaveExtensionPitch: string, 
+		s4_EaveExtensionPitch: string,
+		bayNums: number,
+		bay1_length: number,
+		bay2_length: number,
+		bay3_length: number,
+		bay4_length: number,
+		bay5_length: number,
+		bay6_length: number,
+		bay7_length: number,
+		bay8_length: number,
+		bay9_length: number,
+		bay10_length: number,
+		bay11_length: number,
+		bay12_length: number
 	) {
-		//Set Extension Pitches
-		/*
-		 *If .Range("s2_EaveExtension").Value > 0 Then
-		 *    If .Range("s2_EaveExtensionPitch").Value = "Match Roof" Then
-		 *        s2ExtensionPitch = rPitch
-		 *    Else
-		 *        s2ExtensionPitch = .Range("s2_EaveExtensionPitch").Value
-		 *    End If
-		 *End If
-		 *If .Range("s4_EaveExtension").Value > 0 Then
-		 *    If .Range("s4_EaveExtensionPitch").Value = "Match Roof" Then
-		 *        s4ExtensionPitch = rPitch
-		 *    Else
-		 *        s4ExtensionPitch = .Range("s4_EaveExtensionPitch").Value
-		 *    End If
-		 *End If
-		 */
-		//Generate sidewall 2 column centerlines
-		/*
-		 *If .Range("BayNum").Value > 1 Then
-		 *        //s2 columns
-		 *    For Each BayCell In Range(.Range("Bay1_Length"), .Range("Bay12_Length"))
-		 *        If BayCell.EntireRow.Hidden = False And BayCell.Value <> 0 Then
-		 *            TotalBayLength = TotalBayLength + BayCell.Value
-		 *            If TotalBayLength = bLength Then Exit For
-		 *            //new column
-		 *            Set Column = New clsMember
-		 *            Column.CL = TotalBayLength * 12
-		 *            //add column length (building height)
-		 *            Column.Length = bHeight * 12
-		 *            Column.tEdgeHeight = Column.Length
-		 *            //add to collection
-		 *            s2Columns.Add Column
-		 *        End If
-		 *    Next BayCell
-		 *        //s4 columns
-		 *    TotalBayLength = 0
-		 *    For Bay = 12 To 1 Step -1
-		 *        Set BayCell = .Range("Bay" & Bay & "_Length")
-		 *        If BayCell.EntireRow.Hidden = False And BayCell.Value <> 0 Then
-		 *            TotalBayLength = TotalBayLength + BayCell.Value
-		 *            If TotalBayLength = bLength Then Exit For
-		 *            //new column
-		 *            Set Column = New clsMember
-		 *            Column.CL = TotalBayLength * 12
-		 *            //add column height (building height)
-		 *            If rShape = "Gable" Then Column.Length = bHeight * 12
-		 *            If rShape = "Single Slope" Then Column.Length = HighSideEaveHeight
-		 *            //add to collection
-		 *            Column.tEdgeHeight = Column.Length
-		 *            s4Columns.Add Column
-		 *        End If
-		 *    Next Bay
-		 *End If
-		 */
-		//Build FO Collections
-		//pDoors
-		/*
-		 *For Each FOCell In Range(.Range("pDoorCell1"), .Range("pDoorCell12"))
-		 *    If FOCell.EntireRow.Hidden = False And FOCell.offset(0, 1).Value <> "" Then
-		 *        Set FO = New clsFO
-		 *        FO.FOType = "PDoor"
-		 *        FO.Height = 7 * 12
-		 *        //set width
-		 *        If FOCell.offset(0, 1).Value = "3070" Then
-		 *            FO.Width = (3 * 12)
-		 *        ElseIf FOCell.offset(0, 1).Value = "4070" Then
-		 *            FO.Width = (4 * 12)
-		 *        End If
-		 *        //reverse coordinates as listed on Project Details page; User inputs coordinates from left to right as opposed to left to right (standard within the code)
-		 *        If FOCell.offset(0, 2).Value = "Endwall 1" Or FOCell.offset(0, 2).Value = "Endwall 3" Then
-		 *            FO.rEdgePosition = bWidth * 12 - FOCell.offset(0, 8) * 12
-		 *        Else
-		 *            FO.rEdgePosition = bLength * 12 - FOCell.offset(0, 8).Value * 12
-		 *        End If
-		 *        FO.Description = "pDoor #" & FOCell.Value & ", an FO located on " & FOCell.offset(0, 2).Value & ". rEdge: " & _
-		 *        (FO.rEdgePosition / 12) & "', lEdge: " & FO.lEdgePosition / 12 & "'"
-		 *        //set wall, add to collection
-		 *        Select Case FOCell.offset(0, 2).Value
-		 *        Case "Endwall 1"
-		 *            FO.Wall = "e1"
-		 *            e1FOs.Add FO
-		 *        Case "Sidewall 2"
-		 *            FO.Wall = "s2"
-		 *            s2FOs.Add FO
-		 *        Case "Endwall 3"
-		 *            FO.Wall = "e3"
-		 *            e3FOs.Add FO
-		 *        Case "Sidewall 4"
-		 *            FO.Wall = "s4"
-		 *            s4FOs.Add FO
-		 *        Case "Field Locate"
-		 *            FO.Wall = "Field Locate"
-		 *            fieldlocateFOs.Add FO
-		 *        End Select
-		 *
-		 *    End If
-		 *Next FOCell
-		 *
-		 * //OHDoors
-		 *For Each FOCell In Range(.Range("OHDoorCell1"), .Range("OHDoorCell12"))
-		 *    //if cell isn't hidden, door size is entered
-		 *    If FOCell.EntireRow.Hidden = False And FOCell.offset(0, 1).Value <> "" Then
-		 *        //new FO class
-		 *        Set FO = New clsFO
-		 *        FO.FOType = "OHDoor"
-		 *        FO.Width = FOCell.offset(0, 1).Value * 12
-		 *        FO.Height = FOCell.offset(0, 2).Value * 12
-		 *        FO.bEdgeHeight = 0
-		 *        'reverse coordinates as listed on Project Details page; User inputs coordinates from left to right as opposed to left to right (standard within the code)
-		 *        If FOCell.offset(0, 3).Value = "Endwall 1" Or FOCell.offset(0, 3).Value = "Endwall 3" Then
-		 *            FO.rEdgePosition = bWidth * 12 - FOCell.offset(0, 10) * 12
-		 *        Else
-		 *            FO.rEdgePosition = bLength * 12 - FOCell.offset(0, 10).Value * 12
-		 *        End If
-		 *        FO.Description = "OHDoor #" & FOCell.Value & ", an FO located on " & FOCell.offset(0, 3).Value & ". rEdge: " & _
-		 *        (FO.rEdgePosition / 12) & "', lEdge: " & FO.lEdgePosition / 12 & "' , Height: " & FO.Height / 12 & "'"
-		 *        //set wall, add to collection
-		 *        Select Case FOCell.offset(0, 3).Value
-		 *        Case "Endwall 1"
-		 *            FO.Wall = "e1"
-		 *            e1FOs.Add FO
-		 *        Case "Sidewall 2"
-		 *            FO.Wall = "s2"
-		 *            s2FOs.Add FO
-		 *        Case "Endwall 3"
-		 *            FO.Wall = "e3"
-		 *            e3FOs.Add FO
-		 *        Case "Sidewall 4"
-		 *            FO.Wall = "s4"
-		 *            s4FOs.Add FO
-		 *        End Select
-		 *    End If
-		 *Next FOCell
-		 *
-		 * //Windows
-		 *For Each FOCell In Range(.Range("WindowCell1"), .Range("WindowCell12"))
-		 *    //if cell isn't hidden, door size is entered
-		 *    If FOCell.EntireRow.Hidden = False And FOCell.offset(0, 1).Value <> "" Then
-		 *        'new FO class
-		 *        Set FO = New clsFO
-		 *        FO.FOType = "Window"
-		 *        FO.Width = FOCell.offset(0, 1).Value
-		 *        FO.Height = FOCell.offset(0, 2).Value
-		 *        FO.bEdgeHeight = FOCell.offset(0, 4).Value * 12
-		 *        //reverse coordinates as listed on Project Details page; User inputs coordinates from left to right as opposed to left to right (standard within the code)
-		 *        If FOCell.offset(0, 3).Value = "Endwall 1" Or FOCell.offset(0, 3).Value = "Endwall 3" Then
-		 *            FO.rEdgePosition = bWidth * 12 - FOCell.offset(0, 7) * 12
-		 *        Else
-		 *            FO.rEdgePosition = bLength * 12 - FOCell.offset(0, 7).Value * 12
-		 *        End If
-		 *        FO.Description = "Window #" & FOCell.Value & ", an FO located on " & FOCell.offset(0, 3).Value & ". rEdge: " & _
-		 *        (FO.rEdgePosition / 12) & "', lEdge: " & FO.lEdgePosition / 12 & "', bEdge:" & FO.bEdgeHeight / 12 & "', Height: " & FO.Height / 12 & "'"
-		 *        //set wall, add to collection
-		 *        Select Case FOCell.offset(0, 3).Value
-		 *        Case "Endwall 1"
-		 *            FO.Wall = "e1"
-		 *            e1FOs.Add FO
-		 *        Case "Sidewall 2"
-		 *            FO.Wall = "s2"
-		 *            s2FOs.Add FO
-		 *        Case "Endwall 3"
-		 *            FO.Wall = "e3"
-		 *            e3FOs.Add FO
-		 *        Case "Sidewall 4"
-		 *            FO.Wall = "s4"
-		 *            s4FOs.Add FO
-		 *        Case "Field Locate"
-		 *            FO.Wall = "Field Locate"
-		 *            fieldlocateFOs.Add FO
-		 *        End Select
-		 *    End If
-		 *Next FOCell
-		 *
-		 * //Misc FOs
-		 *For Each FOCell In Range(.Range("MiscFOCell1"), .Range("MiscFOCell12"))
-		 *    //if cell isn't hidden, door size is entered
-		 *    If FOCell.EntireRow.Hidden = False And FOCell.offset(0, 1).Value <> "" Then
-		 *        //new FO class
-		 *        Set FO = New clsFO
-		 *        FO.FOType = "MiscFO"
-		 *        FO.Width = FOCell.offset(0, 1).Value * 12
-		 *        FO.Height = FOCell.offset(0, 2).Value * 12
-		 *        FO.bEdgeHeight = FOCell.offset(0, 6).Value * 12
-		 *        'reverse coordinates as listed on Project Details page; User inputs coordinates from left to right as opposed to left to right (standard within the code)
-		 *        If FOCell.offset(0, 3).Value = "Endwall 1" Or FOCell.offset(0, 3).Value = "Endwall 3" Then
-		 *            FO.rEdgePosition = bWidth * 12 - FOCell.offset(0, 9) * 12
-		 *        Else
-		 *            FO.rEdgePosition = bLength * 12 - FOCell.offset(0, 9).Value * 12
-		 *        End If
-		 *        FO.Description = "MiscFO #" & FOCell.Value & ", an FO located on " & FOCell.offset(0, 3).Value & ". rEdge: " & _
-		 *        (FO.rEdgePosition / 12) & "', lEdge: " & FO.lEdgePosition / 12 & "', bEdge:" & FO.bEdgeHeight / 12 & "', Height: " & FO.Height / 12 & "'"
-		 *        //add structural steel framing selection
-		 *        FO.StructuralSteelOption = FOCell.offset(0, 10).Value
-		 *        //set wall, add to collection
-		 *        Select Case FOCell.offset(0, 3).Value
-		 *        Case "Endwall 1"
-		 *            FO.Wall = "e1"
-		 *            e1FOs.Add FO
-		 *        Case "Sidewall 2"
-		 *            FO.Wall = "s2"
-		 *            s2FOs.Add FO
-		 *        Case "Endwall 3"
-		 *            FO.Wall = "e3"
-		 *            e3FOs.Add FO
-		 *        Case "Sidewall 4"
-		 *            FO.Wall = "s4"
-		 *            s4FOs.Add FO
-		 *        End Select
-		 *    End If
-		 *Next FOCell
-		 *End With
-		 */
+		this.bHeight = formBHeight
+		this.bWidth = formBWidth
+		this.bLength = formBLength
+		this.rPitch = formRPitch
+		this.rShape = formRShape
+
+		this.setExtensionPitches( s2_EaveExtension, s4_EaveExtension, s2_EaveExtensionPitch, s4_EaveExtensionPitch)
+		this.generateSidewall2ColumnCenterlines( 
+			bayNums,
+			bay1_length,
+			bay2_length,
+			bay3_length,
+			bay4_length,
+			bay5_length,
+			bay6_length,
+			bay7_length,
+			bay8_length,
+			bay9_length,
+			bay10_length,
+			bay11_length,
+			bay12_length )
+		this.generateSidewall4ColumnCenterlines( 
+			bayNums,
+			bay1_length,
+			bay2_length,
+			bay3_length,
+			bay4_length,
+			bay5_length,
+			bay6_length,
+			bay7_length,
+			bay8_length,
+			bay9_length,
+			bay10_length,
+			bay11_length,
+			bay12_length )
+		//Class Init of Excel sheet for building line 418 FO sub Doors is where I'm leaving off
+		
 	}
+
+	setExtensionPitches(
+		s2_EaveExtension: number, 
+		s4_EaveExtension: number,
+		s2_EaveExtensionPitch: string, 
+		s4_EaveExtensionPitch: string) {
+		if (s2_EaveExtension > 0 && s2_EaveExtensionPitch == "Match Roof") {
+			this.s2ExtensionPitch = this.rPitch
+		}
+		if (s4_EaveExtension > 0 && s4_EaveExtensionPitch == "Match Roof") {
+			this.s4ExtensionPitch = this.rPitch
+		}
+	}
+
+	generateSidewall2ColumnCenterlines(
+		bayNums: number,
+		bay1_length: number,
+		bay2_length: number,
+		bay3_length: number,
+		bay4_length: number,
+		bay5_length: number,
+		bay6_length: number,
+		bay7_length: number,
+		bay8_length: number,
+		bay9_length: number,
+		bay10_length: number,
+		bay11_length: number,
+		bay12_length: number) {
+			if ( bayNums > 0 ) {
+				var TotalBayLength: number
+				TotalBayLength = 0
+				if ( bay1_length > 0 ) {
+					TotalBayLength += bay1_length
+					if ( TotalBayLength == this.bLength ) {
+						return
+					}
+					var Column = new Member()
+					Column.SetCenterLine ( TotalBayLength * 12 )
+					Column.SetLength ( this.bHeight * 12 )
+					Column.SetTEdgeHeight ( this.bHeight * 12 )
+					this.s2Columns.push(Column)
+				}
+
+				if ( bay2_length > 0 ) {
+					TotalBayLength += bay2_length
+					if ( TotalBayLength == this.bLength ) {
+						return
+					}
+					var Column = new Member()
+					Column.SetCenterLine ( TotalBayLength * 12 )
+					Column.SetLength ( this.bHeight * 12 )
+					Column.SetTEdgeHeight ( this.bHeight * 12 )
+					this.s2Columns.push(Column)
+				}
+
+				if ( bay3_length > 0 ) {
+					TotalBayLength += bay3_length
+					if ( TotalBayLength == this.bLength ) {
+						return
+					}
+					var Column = new Member()
+					Column.SetCenterLine ( TotalBayLength * 12 )
+					Column.SetLength ( this.bHeight * 12 )
+					Column.SetTEdgeHeight ( this.bHeight * 12 )
+					this.s2Columns.push(Column)
+				}
+
+				if ( bay4_length > 0 ) {
+					TotalBayLength += bay4_length
+					if ( TotalBayLength == this.bLength ) {
+						return
+					}
+					var Column = new Member()
+					Column.SetCenterLine ( TotalBayLength * 12 )
+					Column.SetLength ( this.bHeight * 12 )
+					Column.SetTEdgeHeight ( this.bHeight * 12 )
+					this.s2Columns.push(Column)
+				}
+
+				if ( bay5_length > 0 ) {
+					TotalBayLength += bay5_length
+					if ( TotalBayLength == this.bLength ) {
+						return
+					}
+					var Column = new Member()
+					Column.SetCenterLine ( TotalBayLength * 12 )
+					Column.SetLength ( this.bHeight * 12 )
+					Column.SetTEdgeHeight ( this.bHeight * 12 )
+					this.s2Columns.push(Column)
+				}
+
+				if ( bay6_length > 0 ) {
+					TotalBayLength += bay6_length
+					if ( TotalBayLength == this.bLength ) {
+						return
+					}
+					var Column = new Member()
+					Column.SetCenterLine ( TotalBayLength * 12 )
+					Column.SetLength ( this.bHeight * 12 )
+					Column.SetTEdgeHeight ( this.bHeight * 12 )
+					this.s2Columns.push(Column)
+				}
+
+				if ( bay7_length > 0 ) {
+					TotalBayLength += bay7_length
+					if ( TotalBayLength == this.bLength ) {
+						return
+					}
+					var Column = new Member()
+					Column.SetCenterLine ( TotalBayLength * 12 )
+					Column.SetLength ( this.bHeight * 12 )
+					Column.SetTEdgeHeight ( this.bHeight * 12 )
+					this.s2Columns.push(Column)
+				}
+
+				if ( bay8_length > 0 ) {
+					TotalBayLength += bay8_length
+					if ( TotalBayLength == this.bLength ) {
+						return
+					}
+					var Column = new Member()
+					Column.SetCenterLine ( TotalBayLength * 12 )
+					Column.SetLength ( this.bHeight * 12 )
+					Column.SetTEdgeHeight ( this.bHeight * 12 )
+					this.s2Columns.push(Column)
+				}
+
+				if ( bay9_length > 0 ) {
+					TotalBayLength += bay9_length
+					if ( TotalBayLength == this.bLength ) {
+						return
+					}
+					var Column = new Member()
+					Column.SetCenterLine ( TotalBayLength * 12 )
+					Column.SetLength ( this.bHeight * 12 )
+					Column.SetTEdgeHeight ( this.bHeight * 12 )
+					this.s2Columns.push(Column)
+				}
+
+				if ( bay10_length > 0 ) {
+					TotalBayLength += bay10_length
+					if ( TotalBayLength == this.bLength ) {
+						return
+					}
+					var Column = new Member()
+					Column.SetCenterLine ( TotalBayLength * 12 )
+					Column.SetLength ( this.bHeight * 12 )
+					Column.SetTEdgeHeight ( this.bHeight * 12 )
+					this.s2Columns.push(Column)
+				}
+
+				if ( bay11_length > 0 ) {
+					TotalBayLength += bay11_length
+					if ( TotalBayLength == this.bLength ) {
+						return
+					}
+					var Column = new Member()
+					Column.SetCenterLine ( TotalBayLength * 12 )
+					Column.SetLength ( this.bHeight * 12 )
+					Column.SetTEdgeHeight ( this.bHeight * 12 )
+					this.s2Columns.push(Column)
+				}
+
+				if ( bay12_length > 0 ) {
+					TotalBayLength += bay12_length
+					if ( TotalBayLength == this.bLength ) {
+						return
+					}
+					var Column = new Member()
+					Column.SetCenterLine ( TotalBayLength * 12 )
+					Column.SetLength ( this.bHeight * 12 )
+					Column.SetTEdgeHeight ( this.bHeight * 12 )
+					this.s2Columns.push(Column)
+				}
+			}
+		}
+
+	generateSidewall4ColumnCenterlines(
+		bayNums: number,
+		bay1_length: number,
+		bay2_length: number,
+		bay3_length: number,
+		bay4_length: number,
+		bay5_length: number,
+		bay6_length: number,
+		bay7_length: number,
+		bay8_length: number,
+		bay9_length: number,
+		bay10_length: number,
+		bay11_length: number,
+		bay12_length: number) {
+			if ( bayNums > 0 ) {
+				var TotalBayLength: number
+				TotalBayLength = 0
+				if ( bay1_length > 0 ) {
+					TotalBayLength += bay1_length
+					if ( TotalBayLength == this.bLength ) {
+						return
+					}
+					var Column = new Member()
+					Column.SetCenterLine ( TotalBayLength * 12 )
+					if ( this.rShape == 'Gable' ) {
+						Column.SetLength( this.bHeight * 12 )
+					}
+					if ( this.rShape == 'Single Slope' ) {
+						Column.SetLength( this.HighSideEaveHeight() )
+					}
+					Column.SetTEdgeHeight ( Column.length )
+					this.s4Columns.push(Column)
+				}
+
+				if ( bay2_length > 0 ) {
+					TotalBayLength += bay2_length
+					if ( TotalBayLength == this.bLength ) {
+						return
+					}
+					var Column = new Member()
+					Column.SetCenterLine ( TotalBayLength * 12 )
+					if ( this.rShape == 'Gable' ) {
+						Column.SetLength( this.bHeight * 12 )
+					}
+					if ( this.rShape == 'Single Slope' ) {
+						Column.SetLength( this.HighSideEaveHeight() )
+					}
+					Column.SetTEdgeHeight ( Column.length )
+					this.s4Columns.push(Column)
+				}
+
+				if ( bay3_length > 0 ) {
+					TotalBayLength += bay3_length
+					if ( TotalBayLength == this.bLength ) {
+						return
+					}
+					var Column = new Member()
+					Column.SetCenterLine ( TotalBayLength * 12 )
+					if ( this.rShape == 'Gable' ) {
+						Column.SetLength( this.bHeight * 12 )
+					}
+					if ( this.rShape == 'Single Slope' ) {
+						Column.SetLength( this.HighSideEaveHeight() )
+					}
+					Column.SetTEdgeHeight ( Column.length )
+					this.s4Columns.push(Column)
+				}
+
+				if ( bay4_length > 0 ) {
+					TotalBayLength += bay4_length
+					if ( TotalBayLength == this.bLength ) {
+						return
+					}
+					var Column = new Member()
+					Column.SetCenterLine ( TotalBayLength * 12 )
+					if ( this.rShape == 'Gable' ) {
+						Column.SetLength( this.bHeight * 12 )
+					}
+					if ( this.rShape == 'Single Slope' ) {
+						Column.SetLength( this.HighSideEaveHeight() )
+					}
+					Column.SetTEdgeHeight ( Column.length )
+					this.s4Columns.push(Column)
+				}
+
+				if ( bay5_length > 0 ) {
+					TotalBayLength += bay5_length
+					if ( TotalBayLength == this.bLength ) {
+						return
+					}
+					var Column = new Member()
+					Column.SetCenterLine ( TotalBayLength * 12 )
+					if ( this.rShape == 'Gable' ) {
+						Column.SetLength( this.bHeight * 12 )
+					}
+					if ( this.rShape == 'Single Slope' ) {
+						Column.SetLength( this.HighSideEaveHeight() )
+					}
+					Column.SetTEdgeHeight ( Column.length )
+					this.s4Columns.push(Column)
+				}
+
+				if ( bay6_length > 0 ) {
+					TotalBayLength += bay6_length
+					if ( TotalBayLength == this.bLength ) {
+						return
+					}
+					var Column = new Member()
+					Column.SetCenterLine ( TotalBayLength * 12 )
+					if ( this.rShape == 'Gable' ) {
+						Column.SetLength( this.bHeight * 12 )
+					}
+					if ( this.rShape == 'Single Slope' ) {
+						Column.SetLength( this.HighSideEaveHeight() )
+					}
+					Column.SetTEdgeHeight ( Column.length )
+					this.s4Columns.push(Column)
+				}
+
+				if ( bay7_length > 0 ) {
+					TotalBayLength += bay7_length
+					if ( TotalBayLength == this.bLength ) {
+						return
+					}
+					var Column = new Member()
+					Column.SetCenterLine ( TotalBayLength * 12 )
+					if ( this.rShape == 'Gable' ) {
+						Column.SetLength( this.bHeight * 12 )
+					}
+					if ( this.rShape == 'Single Slope' ) {
+						Column.SetLength( this.HighSideEaveHeight() )
+					}
+					Column.SetTEdgeHeight ( Column.length )
+					this.s4Columns.push(Column)
+				}
+
+				if ( bay8_length > 0 ) {
+					TotalBayLength += bay8_length
+					if ( TotalBayLength == this.bLength ) {
+						return
+					}
+					var Column = new Member()
+					Column.SetCenterLine ( TotalBayLength * 12 )
+					if ( this.rShape == 'Gable' ) {
+						Column.SetLength( this.bHeight * 12 )
+					}
+					if ( this.rShape == 'Single Slope' ) {
+						Column.SetLength( this.HighSideEaveHeight() )
+					}
+					Column.SetTEdgeHeight ( Column.length )
+					this.s4Columns.push(Column)
+				}
+
+				if ( bay9_length > 0 ) {
+					TotalBayLength += bay9_length
+					if ( TotalBayLength == this.bLength ) {
+						return
+					}
+					var Column = new Member()
+					Column.SetCenterLine ( TotalBayLength * 12 )
+					if ( this.rShape == 'Gable' ) {
+						Column.SetLength( this.bHeight * 12 )
+					}
+					if ( this.rShape == 'Single Slope' ) {
+						Column.SetLength( this.HighSideEaveHeight() )
+					}
+					Column.SetTEdgeHeight ( Column.length )
+					this.s4Columns.push(Column)
+				}
+
+				if ( bay10_length > 0 ) {
+					TotalBayLength += bay10_length
+					if ( TotalBayLength == this.bLength ) {
+						return
+					}
+					var Column = new Member()
+					Column.SetCenterLine ( TotalBayLength * 12 )
+					if ( this.rShape == 'Gable' ) {
+						Column.SetLength( this.bHeight * 12 )
+					}
+					if ( this.rShape == 'Single Slope' ) {
+						Column.SetLength( this.HighSideEaveHeight() )
+					}
+					Column.SetTEdgeHeight ( Column.length )
+					this.s4Columns.push(Column)
+				}
+
+				if ( bay11_length > 0 ) {
+					TotalBayLength += bay11_length
+					if ( TotalBayLength == this.bLength ) {
+						return
+					}
+					var Column = new Member()
+					Column.SetCenterLine ( TotalBayLength * 12 )
+					if ( this.rShape == 'Gable' ) {
+						Column.SetLength( this.bHeight * 12 )
+					}
+					if ( this.rShape == 'Single Slope' ) {
+						Column.SetLength( this.HighSideEaveHeight() )
+					}
+					Column.SetTEdgeHeight ( Column.length )
+					this.s4Columns.push(Column)
+				}
+
+				if ( bay12_length > 0 ) {
+					TotalBayLength += bay12_length
+					if ( TotalBayLength == this.bLength ) {
+						return
+					}
+					var Column = new Member()
+					Column.SetCenterLine ( TotalBayLength * 12 )
+					if ( this.rShape == 'Gable' ) {
+						Column.SetLength( this.bHeight * 12 )
+					}
+					if ( this.rShape == 'Single Slope' ) {
+						Column.SetLength( this.HighSideEaveHeight() )
+					}
+					Column.SetTEdgeHeight ( Column.length )
+					this.s4Columns.push(Column)
+				}
+			}
+		}
 
 	RoofLength() {
-		return (
-			this.bLength * 12 + this.e1Overhang + this.e1Extension + this.e3Overhang + this.e3Extension
-		)
+		return ( this.bLength * 12 +this.e1Overhang + this.e1Extension + this.e3Overhang + this.e3Extension )	
 	}
-	RoofFtLength() {
-		return (
-			(this.bLength * 12 +
-				this.e1Overhang +
-				this.e1Extension +
-				this.e3Overhang +
-				this.e3Extension) /
-			12
-		)
-	}
-	HighSideEaveHeight() {
-		return this.bHeight * 12 + this.bWidth * this.rPitch
-	}
-	s2ExtensionRafterLength() {
-		if (this.s2Extension === 0) {
-			return 0
-		} else {
-			return (this.s2Extension / 12) * Math.sqrt(144 + this.s4ExtensionPitch)
-		}
-	}
-	s4ExtensionRafterLength() {
-		if (this.s4Extension === 0) {
-			return 0
-		} else {
-			return (this.s4Extension / 12) * Math.sqrt((12 ^ 2) + (this.s4ExtensionPitch ^ 2))
-		}
-	}
-	/*
-	 * Extension Intersections
-	 * Note: Intersecting extension panels are accounted for as eave extension panels
-	 *
-	 */
-	s2e1ExtensionIntersection() {
-		//If the input box for s2e1_Intersection = "N/A" or "Exclude" then
-		//return false
-		//If '' = "Include" then
-		//return true
-		//Input box from Estimation Sheet Range Key "s2e1_Intersection"
-	}
-	s2e3ExtensionIntersection() {
-		//If the input box for s2e3_Intersection = "N/A" or "Exclude" then
-		//return false
-		//If '' = "Include" then
-		//return true
-		//Input box from Estimation Sheet Range Key "s2e3_Intersection"
-	}
-	s4e1ExtensionIntersection() {
-		//If the input box for s4e1_Intersection = "N/A" or "Exclude" then
-		//return false
-		//If '' = "Include" then
-		//return true
-		//Input box from Estimation Sheet Range Key "s4e1_Intersection"
-	}
-	s4e3ExtensionIntersection() {
-		//If the input box for s4e3_Intersection = "N/A" or "Exclude" then
-		//return false
-		//If '' = "Include" then
-		//return true
-		//Input box from Estimation Sheet Range Key "s4e3_Intersection"
-	}
-	/*
-	 * Eave Extension Lengths (from endwall to endwall)
-	 * The below return errors from this.fn() will be resolved when logic is resolved
-	 */
-	s2EaveExtensionBuildingLength() {
-		this.EaveExtLength = this.bLength * 12 + this.e1Overhang + this.e3Overhang
-		if (this.s2e1ExtensionIntersection()) {
-			this.EaveExtLength += this.e1Extension
-		}
-		if (this.s2e3ExtensionIntersection()) {
-			this.EaveExtLength += this.e3Extension
-		}
-		return this.EaveExtLength
-	}
-	s4EaveExtensionBuildingLength() {
-		this.EaveExtLength = this.bLength * 12 + this.e1Overhang + this.e3Overhang
-		if (this.s4e1ExtensionIntersection()) {
-			this.EaveExtLength += this.e1Extension
-		}
-		if (this.s4e3ExtensionIntersection()) {
-			this.EaveExtLength += this.e3Extension
-		}
-		return this.EaveExtLength
-	}
-	NetSingleRoofPanelQty() {
-		return Math.round(
-			(this.bLength * 12 +
-				this.e1Overhang +
-				this.e3Overhang +
-				this.e1Extension +
-				this.e3Extension) /
-				12 /
-				3
-		)
-	}
-	//Wall Exclusions
-	WallStatus(Wall: string) {
-		/*
-		 *Return the estimating sheet range(Variable("Wall") && "_WallStatus"))
-		 *VBA Dev used var passed in to fn to determine which form item's value to use
-		 */
-	}
-	LengthAboveFinishedFloor(Wall: string) {
-		/*
-		 *If Estimating Sheet Range of the passed in Variable("Wall") && _WallStatus
-		 * = "Include" Return 0
-		 * = "Partial" Return the value of the range to cells to the right....:(
-		 * = "Gable Only" Return bHeight
-		 */
-	}
-	LinerPanels(Location: string) {
-		/*
-		 *If Estimation Sheet Range Variable("Location") && _LinerPanels
-		 * = nothing then return "None"
-		 */
-	}
-	Wainscot(Wall: string) {
-		/*
-		 *If Estimation Sheet Range Variable("Wall") && Wainscot
-		 * = nothing then return "None"
-		 */
-	}
-	// Expandable Endwall
-	ExpandableEndwall(eWall: string) {
-		/* If Estimation Sheet Range Variable("eWall") && _Expandable
-		 * <> "Yes" return False else True
-		 */
-	}
-	/* VBA-Dev's msg here
-	 *
-	 *Function for height to the very top of the building (that is, the top surface, not the bottom of the rafter) at a given horizontal distance
-	 * SHOULD ONLY BE CALLED AFTER INT COLUMNS ARE GENERATED
-	 *
-	 * Who the fuck knows how that's useful to anyone reading that in the future.
-	 */
-	DistanceToRoof(Wall: string, DistanceFromRightCorner: number, StartingHeight: number) {
-		//Looks like a really stupid way to calculate distance coming up...
-		//VBA-Dev Note:
-		//ActualPitch = (((bWidth * (rPitch / 12))) / ( ))
-		let DistanceFromCenter: number
 
-		if (this.rShape === 'Gable') {
-			switch (Wall) {
-				case 's2' || 's4':
-					return this.bHeight * 12 - StartingHeight
-				case 'e1':
-					if (DistanceFromRightCorner / 12 <= this.bWidth / 2) {
-						return (DistanceFromRightCorner / 12) * this.rPitch + this.bHeight * 12 - StartingHeight
-					} else if (DistanceFromRightCorner / 12 > this.bWidth / 2) {
-						DistanceFromCenter = DistanceFromRightCorner - (this.bWidth / 2) * 12
-						return (
-							(this.bWidth - DistanceFromRightCorner / 12) * this.rPitch +
-							this.bHeight * 12 -
-							StartingHeight
-						)
-					}
-				case 'e3':
-					if (DistanceFromRightCorner / 12 <= this.bWidth / 2) {
-						return (DistanceFromRightCorner / 12) * this.rPitch + this.bHeight * 12 - StartingHeight
-					} else if (DistanceFromRightCorner / 12 > this.bWidth / 2) {
-						DistanceFromCenter = DistanceFromRightCorner - (this.bWidth / 2) * 12
-						return (
-							(this.bWidth - DistanceFromRightCorner / 12) * this.rPitch +
-							this.bHeight * 12 -
-							StartingHeight
-						)
-					}
-			}
-		} else if (this.rShape === 'Single Slope') {
-			switch (Wall) {
-				case 'e1':
-					/*
-					 *VBA-Dev Note:
-					 *Inside Distance - Distance ffrom s4 Column = Actual Distance of slope
-					 * Distance of Slope * rPitch = Height above eave height
-					 * Distance above eave height + eave height = distance to roof
-					 */
-					return (
-						(this.bWidth - DistanceFromRightCorner / 12) * this.rPitch +
-						this.bHeight * 12 -
-						StartingHeight
-					)
-				case 's2':
-					return this.bHeight * 12 - StartingHeight
-				case 'e3':
-					/*
-					 *VBA-Dev Note:
-					 *CL - Inside of s2 Column = Actual Distance of Slope
-					 *Distance of Slope * rPitch = Height above eave height
-					 *Distance above eavh height + eave height = distance to roof
-					 */
-					return (DistanceFromRightCorner / 12) * this.rPitch + this.bHeight * 12 - StartingHeight
-				case 's4':
-					return this.bHeight * 12 + this.bWidth * this.rPitch - StartingHeight
-			}
+	RoofFtLength() {
+		return ( this.RoofLength() / 12 )
+	}
+
+	HighSideEaveHeight() {
+		return ( this.bHeight * 12 + this.bWidth * this.rPitch )
+	}
+
+	s2ExtensionRafterLength() {
+		if ( this.s2Extension == 0 ) {
+			return 0
+		}
+		else {
+			return ( this.s2Extension / 12 * Math.sqrt( 144 + this.s2ExtensionPitch * this.s2ExtensionPitch ))
 		}
 	}
+
+	s4ExtensionRafterLength() {
+		if ( this.s4Extension == 0 ) {
+			return 0
+		}
+		else {
+			return ( this.s4Extension / 12 * Math.sqrt( 144 + this.s4ExtensionPitch * this.s4ExtensionPitch ))
+		}
+	}
+
+	s2e1ExtensionIntersection( s2e1_Intersection: string ) {
+		if ( s2e1_Intersection == 'N/A' || s2e1_Intersection == 'Exclude' ) {
+			return false
+		}
+		if ( s2e1_Intersection == 'Include' ) {
+			return true
+		}
+	}
+
+	s2e3ExtensionIntersection( s2e3_Intersection: string ) {
+		if ( s2e3_Intersection == 'N/A' || s2e3_Intersection == 'Exclude' ) {
+			return false
+		}
+		if ( s2e3_Intersection == 'Include' ) {
+			return true
+		}
+	}
+
+	s4e1ExtensionIntersection( s4e1_Intersection: string ) {
+		if ( s4e1_Intersection == 'N/A' || s4e1_Intersection == 'Exclude' ) {
+			return false
+		}
+		if ( s4e1_Intersection == 'Include' ) {
+			return true
+		}
+	}
+
+	s4e3ExtensionIntersection( s4e3_Intersection: string ) {
+		if ( s4e3_Intersection == 'N/A' || s4e3_Intersection == 'Exclude' ) {
+			return false
+		}
+		if ( s4e3_Intersection == 'Include' ) {
+			return true
+		}
+	}
+
+	s2EaveExtensionBuildingLength( s2e1_Intersection: string, s2e3_Intersection: string ) {
+		var EaveExtLength: number = 0
+		EaveExtLength = this.bLength * 12 + this.e1Overhang + this.e3Overhang
+		if ( this.s2e1ExtensionIntersection( s2e1_Intersection ) == true ) {
+			EaveExtLength += this.e1Extension
+		}
+		if ( this.s2e3ExtensionIntersection( s2e3_Intersection ) == true ) {
+			EaveExtLength += this.e1Extension
+		}
+		return EaveExtLength
+	}
+
+	s4EaveExtensionBuildingLength( s4e1_Intersection: string, s4e3_Intersection: string ) {
+		var EaveExtLength: number = 0
+		EaveExtLength = this.bLength * 12 + this.e1Overhang + this.e3Overhang
+		if ( this.s4e1ExtensionIntersection( s4e1_Intersection ) == true ) {
+			EaveExtLength += this.e1Extension
+		}
+		if ( this.s4e3ExtensionIntersection( s4e3_Intersection ) == true ) {
+			EaveExtLength += this.e1Extension
+		}
+		return EaveExtLength
+	}
+
+	NetSingleRoofPanelQty() {
+		return ( Math.round(( this.bLength * 12 + this.e1Overhang + this.e3Overhang + this.e1Extension + this.e3Extension) / 36) )
+	}
+
+	WallStatus( 
+			WallAlterationStatuse1?: string,
+			WallAlterationStatuss2?: string,
+			WallAlterationStatuse3?: string,
+			WallAlterationStatuss4?: string
+		) {
+			if ( typeof WallAlterationStatuse1 != 'undefined' ) {
+				return ( WallAlterationStatuse1 )
+			}
+			if ( typeof WallAlterationStatuss2 != 'undefined' ) {
+				return ( WallAlterationStatuss2 )
+			}
+			if ( typeof WallAlterationStatuse3 != 'undefined' ) {
+				return ( WallAlterationStatuse3 )
+			}
+			if ( typeof WallAlterationStatuss4 != 'undefined' ) {
+				return ( WallAlterationStatuss4 )
+			}
+	}
+
+	LengthAboveFinishedFloor( 
+			WallAlterationStatuse1?: string,
+			WallAlterationStatuss2?: string,
+			WallAlterationStatuse3?: string,
+			WallAlterationStatuss4?: string,
+			WallAlteratione1Length?: number,
+			WallAlterations2Length?: number,
+			WallAlteratione3Length?: number,
+			WallAlterations4Length?: number,
+			
+		) {
+			if ( typeof WallAlterationStatuse1 != 'undefined' ) {
+				if ( WallAlterationStatuse1 == 'Include' ) {
+					return 0
+				}
+				else if( WallAlterationStatuse1 == 'Partial' && typeof WallAlteratione1Length != 'undefined' ) {
+					return WallAlteratione1Length
+				}
+				else if( WallAlterationStatuse1 == 'Gable Only' && typeof WallAlteratione1Length != 'undefined' ) {
+					return this.bHeight
+				}
+			}
+			if ( typeof WallAlterationStatuss2 != 'undefined' ) {
+				if ( WallAlterationStatuss2 == 'Include' ) {
+					return 0
+				}
+				else if( WallAlterationStatuss2 == 'Partial' && typeof WallAlterations2Length != 'undefined' ) {
+					return WallAlterations2Length
+				}
+				else if( WallAlterationStatuss2 == 'Gable Only' && typeof WallAlterations2Length != 'undefined' ) {
+					return this.bHeight
+				}
+			}
+			if ( typeof WallAlterationStatuse3 != 'undefined' ) {
+				if ( WallAlterationStatuse3 == 'Include' ) {
+					return 0
+				}
+				else if( WallAlterationStatuse3 == 'Partial' && typeof WallAlteratione3Length != 'undefined' ) {
+					return WallAlteratione3Length
+				}
+				else if( WallAlterationStatuse3 == 'Gable Only' && typeof WallAlteratione3Length != 'undefined' ) {
+					return this.bHeight
+				}
+			}
+			if ( typeof WallAlterationStatuss4 != 'undefined' ) {
+				if ( WallAlterationStatuss4 == 'Include' ) {
+					return 0
+				}
+				else if( WallAlterationStatuss4 == 'Partial' && typeof WallAlterations4Length != 'undefined' ) {
+					return WallAlterations4Length
+				}
+				else if( WallAlterationStatuss4 == 'Gable Only' && typeof WallAlterations4Length != 'undefined' ) {
+					return this.bHeight
+				}
+			}
+	}
+
+	LinerPanels(
+		LinerPanele1?: string,
+		LinerPanels2?: string,
+		LinerPanele3?: string,
+		LinerPanels4?: string,
+		LinerPanelRoof?: string
+		) {
+			if ( typeof LinerPanele1 != 'undefined' && LinerPanele1 == '') {
+				return 'None'
+			}
+			if ( typeof LinerPanels2 != 'undefined' && LinerPanels2 == '') {
+				return 'None'
+			}
+			if ( typeof LinerPanele3 != 'undefined' && LinerPanele3 == '') {
+				return 'None'
+			}
+			if ( typeof LinerPanels4 != 'undefined' && LinerPanels4 == '') {
+				return 'None'
+			}
+			if ( typeof LinerPanelRoof != 'undefined' && LinerPanelRoof == '') {
+				return 'None'
+			}
+	}
+
+	Wainscot( 
+		Wainscote1?: string,
+		Wainscots2?: string,
+		Wainscote3?: string,
+		Wainscots4?: string,
+	) {
+		if ( typeof Wainscote1 != 'undefined' && Wainscote1 == '') {
+			return 'None'
+		}
+		if ( typeof Wainscots2 != 'undefined' && Wainscots2 == '') {
+			return 'None'
+		}
+		if ( typeof Wainscote3 != 'undefined' && Wainscote3 == '') {
+			return 'None'
+		}
+		if ( typeof Wainscots4 != 'undefined' && Wainscots4 == '') {
+			return 'None'
+		}
+	}
+
+	ExpandableEndwall( 
+		ExpandableEndwalle1?: string,
+		ExpandableEndwalls2?: string,
+		ExpandableEndwalle3?: string,
+		ExpandableEndwalls4?: string,
+	) {
+		if ( typeof ExpandableEndwalle1 != 'undefined' && ExpandableEndwalle1 != 'Yes' ) {
+			return false
+		} else if ( typeof ExpandableEndwalle1 != 'undefined' && ExpandableEndwalle1 == 'Yes' ) {
+			return true
+		}
+		else if ( typeof ExpandableEndwalls2 != 'undefined' && ExpandableEndwalls2 != 'Yes' ) {
+			return false
+		} else if ( typeof ExpandableEndwalls2 != 'undefined' && ExpandableEndwalls2 == 'Yes' ) {
+			return true
+		}
+		else if ( typeof ExpandableEndwalle3 != 'undefined' && ExpandableEndwalle3 != 'Yes' ) {
+			return false
+		}
+		else if ( typeof ExpandableEndwalle3 != 'undefined' && ExpandableEndwalle3 == 'Yes' ) {
+			return true
+		}
+		else if ( typeof ExpandableEndwalls4 != 'undefined' && ExpandableEndwalls4 != 'Yes') {
+			return false
+		}
+		else if ( typeof ExpandableEndwalls4 != 'undefined' && ExpandableEndwalls4 == 'Yes' ) {
+			return true
+		}
+	}
+	DistanceToRoof(	
+		DistanceFromRightCorner: number, 
+		StartingHeight: number,
+		Walle1?: string,
+		Walls2?: string,
+		Walle3?: string,
+		Walls4?: string
+		) {
+			if ( this.rShape == 'Gable' ) {
+				if ( typeof Walls2 != 'undefined' ) {
+					return this.bHeight * 12 - StartingHeight
+				}
+				if ( typeof Walls4 != 'undefined' ) {
+					return this.bHeight * 12 - StartingHeight
+				}
+				if ( typeof Walle1 != 'undefined' ) {
+					if ( DistanceFromRightCorner / 12 <= this.bWidth / 2 ) {
+						return ( DistanceFromRightCorner / 12 * this.rPitch + this.bHeight * 12 - StartingHeight)
+					}
+					else if ( DistanceFromRightCorner / 12 > this.bWidth / 2 ) {
+						var DistanceFromCenter: number
+						DistanceFromCenter = DistanceFromRightCorner - this.bWidth / 2 * 12
+						return ( (this.bWidth - DistanceFromRightCorner / 12) * this.rPitch + this.bHeight * 12 - StartingHeight)
+					}
+				}
+				if ( typeof Walle3 != 'undefined' ) {
+					if ( DistanceFromRightCorner / 12 <= this.bWidth / 2 ) {
+						return ( DistanceFromRightCorner / 12 * this.rPitch + this.bHeight * 12 - StartingHeight)
+					}
+					else if ( DistanceFromRightCorner / 12 > this.bWidth / 2 ) {
+						var DistanceFromCenter: number
+						DistanceFromCenter = DistanceFromRightCorner - this.bWidth / 2 * 12
+						return ( (this.bWidth - DistanceFromRightCorner / 12) * this.rPitch + this.bHeight * 12 - StartingHeight)
+					}
+				}
+			}
+			if ( this.rShape == 'Single Slope' ) {
+				if ( typeof Walle1 != 'undefined' ) {
+					return ( (this.bWidth - DistanceFromRightCorner / 12) * this.rPitch + this.bHeight * 12 - StartingHeight )
+				}
+				if ( typeof Walls2 != 'undefined' ) {
+					return ( this.bHeight * 12 - StartingHeight )
+				}
+				if ( typeof Walle3 != 'undefined') {
+					return ( DistanceFromRightCorner / 12 * this.rPitch + this.bHeight * 12 - StartingHeight )
+				}
+				if ( typeof Walls4 != 'undefined' ) {
+					return ( this.bHeight * 12 + this.bWidth * this.rPitch - StartingHeight )
+				}
+			}
+	}
+
 	//Function for distance from right corner of an endwall at a given height
-	DistanceFromCorner(Wall: string, HeightAlongRoof: number) {
-		let DistanceFromCenter: number
-		if (this.rShape === 'Gable') {
-			return ((HeightAlongRoof - this.bHeight * 12) / this.rPitch) * 12
-		} else if (this.rShape === 'Single Slope') {
-			if (Wall === 'e1') {
-				// 0 is the tallest point
-				return this.bWidth * 12 - ((HeightAlongRoof - this.bHeight * 12) / this.rPitch) * 12
-			} else {
-				return ((HeightAlongRoof - this.bHeight * 12) / this.rPitch) * 12
+	DistanceFromCorner(
+		HeightAlongRoof: number,
+		Walle1?: string
+	) {
+		if ( this.rShape == 'Gable' ) {
+			return ( (HeightAlongRoof - this.bHeight * 12) / this.rPitch )
+		}
+		if ( this.rShape == 'Single Slope' ) {
+			if ( typeof Walle1 != 'undefined' ) {
+				return ( this.bWidth * 12 - (HeightAlongRoof - this.bHeight * 12) / this.rPitch * 12 )
+			}
+			else {
+				return ( (HeightAlongRoof - this.bHeight * 12) / this.rPitch * 12 )
 			}
 		}
 	}

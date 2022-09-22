@@ -1,4 +1,4 @@
-class Member {
+export class Member {
 	//Classified by Type: Column, Rafter, Girt, Eave Struct, etc.
 	mType: string
 
@@ -37,9 +37,23 @@ class Member {
 	size: string
 
 	constructor() {
-		;(this.qty = 1), (this.clsType = 'Member'), (this.loadBearing = false)
+		this.qty = 1
+		this.clsType = 'Member'
+		this.loadBearing = false
 	}
 
+	SetCenterLine(cl: number) {
+		this.cl = cl
+	}
+
+	SetLength ( length: number ) {
+		this.length = length
+	}
+
+	SetTEdgeHeight( height: number ) {
+		this.tEdgeHeight = height
+	}
+	
 	lEdgePosition() {
 		//for receiver cee's, 0 width for the purpose of positioning since purlins will essentually fit flush into it
 		if (this.mType.includes('Receiver Cee')) {
