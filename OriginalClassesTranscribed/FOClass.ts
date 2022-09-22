@@ -2,7 +2,7 @@
 //For the purposes of structural steel, all numeric values are in inches for now. Previous declarations of height and
 //width as integers remain as legacy. New declarations as double probably unnecessary - integers should suffice
 //Possible FO types for structural steel: "PDoor","OHDoor","Window","MiscFO"
-class FO {
+export class FO {
 	height: number
 	width: number
 	foType: string

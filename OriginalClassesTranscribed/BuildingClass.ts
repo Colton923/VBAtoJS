@@ -1,4 +1,5 @@
 import { Member } from './MemberClass'
+import { FO } from './FOClass'
 
 class Building {
 	bLength: number
@@ -182,10 +183,39 @@ class Building {
 			bay10_length,
 			bay11_length,
 			bay12_length )
-		//Class Init of Excel sheet for building line 418 FO sub Doors is where I'm leaving off
 		
 	}
+	SetPersonnelDoors(
+		DoorNums: number,
+		size1?: string,
+		size2?: string,
+		size3?: string,
+		size4?: string,
+		size5?: string,
+		size6?: string,
+		size7?: string,
+		size8?: string,
+		size9?: string,
+		size10?: string,
+		size11?: string,
+		size12?: string,
+		wall1?: string,
+		wall2?: string,
+		wall3?: string,
+		wall4?: string,
+		wall5?: string,
+		wall6?: string,
+		wall7?: string,
+		wall8?: string,
+		wall9?: string,
+		wall10?: string,
+		wall11?: string,
+		wall12?: string,
 
+	) {
+		var FramedOpening = new FO()
+		FO.
+	}
 	setExtensionPitches(
 		s2_EaveExtension: number, 
 		s4_EaveExtension: number,
